@@ -21,9 +21,9 @@ class VideoViewSet(viewsets.ModelViewSet):
             video = Video.objects.get(id=pk)
             stars = request.data['stars']
             comments = request.data['comments']
-            user = request.user
+            user = User.objects.get(username='ashish')
             try:
-                rating = Rating.objects.get(user-user.id, video=video.id)
+                rating = Rating.objects.get(user=user.id, video=video.id)
                 rating.stars =stars
                 rating.comments = comments
                 rating.save()
@@ -59,3 +59,6 @@ class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (AllowAny,)
+    
+    def get_object(self):
+        return self.request.user

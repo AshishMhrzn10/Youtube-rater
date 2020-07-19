@@ -1,9 +1,5 @@
 <template>
     <div class="mt-10">
-         <v-snackbar max-height="10px" v-model="snackbar" :timeout="4000" top>
-            <span>Video successfully added</span>
-            <v-btn text color="pink" @click="snackbar=false" class="ml-8">Close</v-btn>
-        </v-snackbar>
         <v-container>
             <v-row>
                 <v-col md='1'>
@@ -12,7 +8,7 @@
                 <h2 class="mb-6 mt-5 ml-15">Welcome to Youtube Rater</h2>
                 <hr>
                 <div class="text-center mt-5">
-                    <Create @videoAdded='snackbar=true'/>
+                    <Create @add="updatedVideos()"/>
                 </div>
                 <v-card class="mx-auto mt-5" max-width="300" v-for="video in videos" :key="video.id">
                     <v-card-text>
@@ -26,7 +22,7 @@
             </v-col>
             <v-col md='6' color="#F5F5F5">
                 <div></div>
-                <Details :videodetail="videodetail"/>
+                <Details @updated="updatedVideos()" @deleted="updatedVideos()" :videodetail="videodetail"/>
             </v-col>
             </v-row>
         </v-container>
@@ -42,7 +38,6 @@ export default {
         return{
             videos: [],
             videodetail: Object, 
-            snackbar:false,
         }
     },
     components:{Details,Create},
@@ -54,7 +49,12 @@ export default {
         },
         videoDetail(video){
             this.videodetail = video;
-            console.log(this.videodetail)
+        },
+        updatedVideos(video){
+           console.log("fdsfsd")
+            axios.get('http://127.0.0.1:8000/api/videos/')
+            .then(res => (this.videos = res.data))
+            .catch(err => console.log(err))
         }
     },
     created(){
